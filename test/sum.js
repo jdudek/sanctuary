@@ -73,7 +73,7 @@ describe('sum', function() {
   });
 
   it('can be applied to Maybes', function() {
-    eq(S.sum(S.Nothing()), 0);
+    eq(S.sum(S.Nothing), 0);
     eq(S.sum(S.Just(42)), 42);
   });
 

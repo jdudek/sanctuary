@@ -73,7 +73,7 @@ describe('product', function() {
   });
 
   it('can be applied to Maybes', function() {
-    eq(S.product(S.Nothing()), 1);
+    eq(S.product(S.Nothing), 1);
     eq(S.product(S.Just(42)), 42);
   });
 
