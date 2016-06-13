@@ -4,14 +4,35 @@ var throws = require('assert').throws;
 
 var jsc = require('jsverify');
 var R = require('ramda');
+var $ = require('sanctuary-def');
 
 var errorEq = require('../utils').errorEq;
-var S = require('../..');
+var sanctuary = require('../..');
 
+
+//  createUnaryType :: String -> Type -> Type
+var createUnaryType = function(identifier) {
+  return $.UnaryType(identifier,
+                     R.both(R.complement(R.isNil),
+                            R.propEq('@@type', identifier)),
+                     R.props(['value']));
+};
+
+//  ComposeType :: Type -> Type
+var ComposeType = createUnaryType('sanctuary/Compose');
+
+//  IdentityType :: Type -> Type
+var IdentityType = createUnaryType('sanctuary/Identity');
+
+//  env :: Array Type
+var env = sanctuary.env.concat([ComposeType, IdentityType]);
+
+var S = sanctuary.create({checkTypes: true, env: env});
 
 //  Identity :: a -> Identity a
 var Identity = function Identity(x) {
   return {
+    '@@type': 'sanctuary/Identity',
     of: Identity,
     map: function(fn) {
       return Identity(fn(x));
@@ -59,6 +80,7 @@ var RightArb = function(arb) {
 var Compose = function(F, G) {
   var _Compose = function _Compose(x) {
     return {
+      '@@type': 'sanctuary/Compose',
       constructor: _Compose,
       map: function(f) {
         return _Compose(R.map(R.map(f), x));

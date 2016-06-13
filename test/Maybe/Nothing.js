@@ -30,7 +30,7 @@ describe('Nothing', function() {
            errorEq(TypeError,
                    'Invalid value\n' +
                    '\n' +
-                   'Maybe#ap :: Maybe Function -> Maybe a -> Maybe b\n' +
+                   'Maybe#ap :: Maybe (a -> b) -> Maybe a -> Maybe b\n' +
                    '                              ^^^^^^^\n' +
                    '                                 1\n' +
                    '\n' +
@@ -47,13 +47,13 @@ describe('Nothing', function() {
            errorEq(TypeError,
                    'Invalid value\n' +
                    '\n' +
-                   'Maybe#chain :: Maybe a -> Function -> Maybe b\n' +
-                   '                          ^^^^^^^^\n' +
-                   '                             1\n' +
+                   'Maybe#chain :: Maybe a -> (a -> Maybe b) -> Maybe b\n' +
+                   '                          ^^^^^^^^^^^^^^\n' +
+                   '                                1\n' +
                    '\n' +
                    '1)  null :: Null\n' +
                    '\n' +
-                   'The value at position 1 is not a member of ‘Function’.\n'));
+                   'The value at position 1 is not a member of ‘a -> Maybe b’.\n'));
   });
 
   it('provides a "concat" method', function() {
@@ -108,13 +108,13 @@ describe('Nothing', function() {
            errorEq(TypeError,
                    'Invalid value\n' +
                    '\n' +
-                   'Maybe#extend :: Maybe a -> Function -> Maybe a\n' +
-                   '                           ^^^^^^^^\n' +
-                   '                              1\n' +
+                   'Maybe#extend :: Maybe a -> (Maybe a -> a) -> Maybe a\n' +
+                   '                           ^^^^^^^^^^^^^^\n' +
+                   '                                 1\n' +
                    '\n' +
                    '1)  null :: Null\n' +
                    '\n' +
-                   'The value at position 1 is not a member of ‘Function’.\n'));
+                   'The value at position 1 is not a member of ‘Maybe a -> a’.\n'));
   });
 
   it('provides a "filter" method', function() {
@@ -136,13 +136,13 @@ describe('Nothing', function() {
            errorEq(TypeError,
                    'Invalid value\n' +
                    '\n' +
-                   'Maybe#filter :: Maybe a -> Function -> Maybe a\n' +
-                   '                           ^^^^^^^^\n' +
-                   '                              1\n' +
+                   'Maybe#filter :: Maybe a -> (a -> Boolean) -> Maybe a\n' +
+                   '                           ^^^^^^^^^^^^^^\n' +
+                   '                                 1\n' +
                    '\n' +
                    '1)  null :: Null\n' +
                    '\n' +
-                   'The value at position 1 is not a member of ‘Function’.\n'));
+                   'The value at position 1 is not a member of ‘a -> Boolean’.\n'));
   });
 
   it('provides a "map" method', function() {
@@ -153,30 +153,30 @@ describe('Nothing', function() {
            errorEq(TypeError,
                    'Invalid value\n' +
                    '\n' +
-                   'Maybe#map :: Maybe a -> Function -> Maybe b\n' +
+                   'Maybe#map :: Maybe a -> (a -> b) -> Maybe b\n' +
                    '                        ^^^^^^^^\n' +
                    '                           1\n' +
                    '\n' +
                    '1)  null :: Null\n' +
                    '\n' +
-                   'The value at position 1 is not a member of ‘Function’.\n'));
+                   'The value at position 1 is not a member of ‘a -> b’.\n'));
   });
 
   it('provides a "reduce" method', function() {
     eq(S.Nothing().reduce.length, 2);
-    eq(S.Nothing().reduce(function(a, b) { return a + b; }, 10), 10);
+    eq(S.Nothing().reduce(function(x, y) { return x - y; }, 42), 42);
 
     throws(function() { S.Nothing().reduce(null, null); },
            errorEq(TypeError,
                    'Invalid value\n' +
                    '\n' +
-                   'Maybe#reduce :: Maybe a -> Function -> b -> b\n' +
-                   '                           ^^^^^^^^\n' +
-                   '                              1\n' +
+                   'Maybe#reduce :: Maybe a -> ((b, a) -> b) -> b -> b\n' +
+                   '                           ^^^^^^^^^^^^^\n' +
+                   '                                 1\n' +
                    '\n' +
                    '1)  null :: Null\n' +
                    '\n' +
-                   'The value at position 1 is not a member of ‘Function’.\n'));
+                   'The value at position 1 is not a member of ‘(b, a) -> b’.\n'));
   });
 
   it('provides a "sequence" method', function() {
